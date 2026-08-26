@@ -152,6 +152,99 @@ body {
   margin-bottom: 16px;
 }
 
+.event-list {
+  display: grid;
+  gap: 16px;
+}
+
+.event-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 20px;
+  background: #ffffff;
+}
+
+.event-card.completed {
+  opacity: 0.65;
+  background: #f9fafb;
+}
+
+.event-card-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.event-card h3 {
+  margin: 0 0 8px;
+}
+
+.event-card p {
+  margin: 6px 0;
+  color: #4b5563;
+}
+
+.priority-badge {
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.priority-badge.low {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.priority-badge.medium {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.priority-badge.high {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.event-details {
+  margin-bottom: 16px;
+}
+
+.event-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.secondary-button {
+  border: none;
+  background: #e0e7ff;
+  color: #3730a3;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.secondary-button:hover {
+  background: #c7d2fe;
+}
+
+.danger-button {
+  border: none;
+  background: #fee2e2;
+  color: #991b1b;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.danger-button:hover {
+  background: #fecaca;
+}
+
 @media (max-width: 700px) {
   .form-row {
     grid-template-columns: 1fr;
