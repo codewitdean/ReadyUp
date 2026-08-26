@@ -1,13 +1,19 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "./components/Header";
 import EventForm from "./components/EventForm";
 import EventList from "./components/EventList";
 import type { ReadyUpEvent } from "./types/Event";
+import {
+  loadEventsFromStorage,
+  saveEventsToStorage,
+} from "./utils/storageUtils.ts";
 import "./App.css";
-
+import { sortEventsByDateTime } from "./utils/eventUtils";
 function App() {
   const [showForm, setShowForm] = useState(false);
-  const [events, setEvents] = useState<ReadyUpEvent[]>([]);
+  const [events, setEvents] = useState<ReadyUpEvent[]>(() =>
+    loadEventsFromStorage()
+  );
 
   const completedCount = events.filter(
     (event) => event.status === "completed"
@@ -16,6 +22,12 @@ function App() {
   const upcomingCount = events.filter(
     (event) => event.status === "upcoming"
   ).length;
+
+  useEffect(() => {
+    saveEventsToStorage(events);
+  }, [events]);
+
+  const sortedEvents = sortEventsByDateTime(events);
 
   function handleAddEventClick() {
     setShowForm(!showForm);
@@ -73,7 +85,7 @@ function App() {
         <h2>Your Events</h2>
 
         <EventList
-          events={events}
+          events={sortedEvents}
           onCompleteEvent={handleCompleteEvent}
           onDeleteEvent={handleDeleteEvent}
         />
