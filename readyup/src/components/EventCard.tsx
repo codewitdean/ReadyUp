@@ -1,5 +1,5 @@
 import type { ReadyUpEvent } from "../types/Event";
-
+import { calculateReminderTimes } from "../utils/reminderUtils";
 type EventCardProps = {
   event: ReadyUpEvent;
   onCompleteEvent: (eventId: string) => void;
@@ -7,6 +7,7 @@ type EventCardProps = {
 };
 
 function EventCard({ event, onCompleteEvent, onDeleteEvent }: EventCardProps) {
+const reminders = calculateReminderTimes(event.date, event.startTime);
   return (
     <article className={`event-card ${event.status === "completed" ? "completed" : ""}`}>
       <div className="event-card-header">
@@ -44,7 +45,17 @@ function EventCard({ event, onCompleteEvent, onDeleteEvent }: EventCardProps) {
           </p>
         )}
       </div>
+<div className="reminder-preview">
+  <h4>Reminder Preview</h4>
 
+  <ul>
+    {reminders.map((reminder) => (
+      <li key={reminder.type}>
+        <strong>{reminder.label}:</strong> {reminder.reminderTime}
+      </li>
+    ))}
+  </ul>
+</div>
       <div className="event-actions">
         {event.status !== "completed" && (
           <button
@@ -54,6 +65,7 @@ function EventCard({ event, onCompleteEvent, onDeleteEvent }: EventCardProps) {
             Mark Complete
           </button>
         )}
+        
 
         <button
           className="danger-button"

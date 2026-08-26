@@ -3,31 +3,29 @@ import Header from "./components/Header";
 import EventForm from "./components/EventForm";
 import EventList from "./components/EventList";
 import type { ReadyUpEvent } from "./types/Event";
+import { groupEventsByDateStatus } from "./utils/eventUtils";
 import {
   loadEventsFromStorage,
   saveEventsToStorage,
-} from "./utils/storageUtils.ts";
+} from "./utils/storageUtils";
 import "./App.css";
-import { sortEventsByDateTime } from "./utils/eventUtils";
+
 function App() {
   const [showForm, setShowForm] = useState(false);
   const [events, setEvents] = useState<ReadyUpEvent[]>(() =>
     loadEventsFromStorage()
   );
 
-  const completedCount = events.filter(
-    (event) => event.status === "completed"
-  ).length;
-
-  const upcomingCount = events.filter(
-    (event) => event.status === "upcoming"
-  ).length;
-
   useEffect(() => {
     saveEventsToStorage(events);
   }, [events]);
 
-  const sortedEvents = sortEventsByDateTime(events);
+  const groupedEvents = groupEventsByDateStatus(events);
+
+  const totalCount = events.length;
+  const todayCount = groupedEvents.today.length;
+  const upcomingCount = groupedEvents.upcoming.length;
+  const completedCount = groupedEvents.completed.length;
 
   function handleAddEventClick() {
     setShowForm(!showForm);
@@ -67,7 +65,12 @@ function App() {
       <section className="dashboard-grid">
         <div className="summary-card">
           <h2>Total Events</h2>
-          <p>{events.length} events</p>
+          <p>{totalCount} events</p>
+        </div>
+
+        <div className="summary-card">
+          <h2>Today</h2>
+          <p>{todayCount} events</p>
         </div>
 
         <div className="summary-card">
@@ -85,7 +88,33 @@ function App() {
         <h2>Your Events</h2>
 
         <EventList
-          events={sortedEvents}
+          title="Today"
+          events={groupedEvents.today}
+          emptyMessage="No events scheduled for today."
+          onCompleteEvent={handleCompleteEvent}
+          onDeleteEvent={handleDeleteEvent}
+        />
+
+        <EventList
+          title="Upcoming"
+          events={groupedEvents.upcoming}
+          emptyMessage="No upcoming events."
+          onCompleteEvent={handleCompleteEvent}
+          onDeleteEvent={handleDeleteEvent}
+        />
+
+        <EventList
+          title="Past"
+          events={groupedEvents.past}
+          emptyMessage="No past events."
+          onCompleteEvent={handleCompleteEvent}
+          onDeleteEvent={handleDeleteEvent}
+        />
+
+        <EventList
+          title="Completed"
+          events={groupedEvents.completed}
+          emptyMessage="No completed events yet."
           onCompleteEvent={handleCompleteEvent}
           onDeleteEvent={handleDeleteEvent}
         />

@@ -52,7 +52,7 @@ body {
 
 .dashboard-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 18px;
   margin-bottom: 24px;
 }
@@ -244,9 +244,45 @@ body {
 .danger-button:hover {
   background: #fecaca;
 }
+.event-group {
+  margin-top: 28px;
+}
+
+.event-group h3 {
+  margin-bottom: 14px;
+  font-size: 1.25rem;
+  color: #111827;
+}
 
 @media (max-width: 700px) {
-  .form-row {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 18px;
+  }
+
+  .dashboard-grid {
     grid-template-columns: 1fr;
   }
+}
+.reminder-preview {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  padding: 14px;
+  border-radius: 12px;
+  margin-bottom: 16px;
+}
+
+.reminder-preview h4 {
+  margin: 0 0 8px;
+}
+
+.reminder-preview ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.reminder-preview li {
+  margin-bottom: 6px;
+  color: #4b5563;
 }
