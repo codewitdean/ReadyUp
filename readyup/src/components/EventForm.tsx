@@ -1,5 +1,10 @@
 import { useState } from "react";
-import type { ReadyUpEvent, EventCategory, EventPriority } from "../types/Event";
+import type {
+  ReadyUpEvent,
+  EventCategory,
+  EventPriority,
+  EventFormat,
+} from "../types/Event";
 
 type EventFormProps = {
   onAddEvent: (event: ReadyUpEvent) => void;
@@ -11,6 +16,7 @@ function EventForm({ onAddEvent }: EventFormProps) {
   const [date, setDate] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
+  const [eventFormat, setEventFormat] = useState<EventFormat>("online");
   const [location, setLocation] = useState("");
   const [meetingLink, setMeetingLink] = useState("");
   const [category, setCategory] = useState<EventCategory>("school");
@@ -35,6 +41,29 @@ function EventForm({ onAddEvent }: EventFormProps) {
       return;
     }
 
+    if (endTime && endTime <= startTime) {
+      setError("End time must be after start time.");
+      return;
+    }
+
+    if (eventFormat === "online" && !meetingLink.trim()) {
+      setError("Meeting link is required for online events.");
+      return;
+    }
+
+    if (eventFormat === "in_person" && !location.trim()) {
+      setError("Location is required for in-person events.");
+      return;
+    }
+
+    if (
+      eventFormat === "hybrid" &&
+      (!location.trim() || !meetingLink.trim())
+    ) {
+      setError("Hybrid events need both a location and a meeting link.");
+      return;
+    }
+
     const newEvent: ReadyUpEvent = {
       id: crypto.randomUUID(),
       title,
@@ -42,6 +71,7 @@ function EventForm({ onAddEvent }: EventFormProps) {
       date,
       startTime,
       endTime,
+      eventFormat,
       location,
       meetingLink,
       category,
@@ -57,12 +87,19 @@ function EventForm({ onAddEvent }: EventFormProps) {
     setDate("");
     setStartTime("");
     setEndTime("");
+    setEventFormat("online");
     setLocation("");
     setMeetingLink("");
     setCategory("school");
     setPriority("medium");
     setError("");
   }
+
+  const shouldShowLocation =
+    eventFormat === "in_person" || eventFormat === "hybrid";
+
+  const shouldShowMeetingLink =
+    eventFormat === "online" || eventFormat === "hybrid";
 
   return (
     <form className="event-form" onSubmit={handleSubmit}>
@@ -119,24 +156,52 @@ function EventForm({ onAddEvent }: EventFormProps) {
       </div>
 
       <div className="form-group">
-        <label>Location</label>
-        <input
-          type="text"
-          placeholder="Example: Online, Campus, Office"
-          value={location}
-          onChange={(e) => setLocation(e.target.value)}
-        />
+        <label>Event Format</label>
+        <select
+          value={eventFormat}
+          onChange={(e) => {
+            const selectedFormat = e.target.value as EventFormat;
+            setEventFormat(selectedFormat);
+            setError("");
+
+            if (selectedFormat === "online") {
+              setLocation("");
+            }
+
+            if (selectedFormat === "in_person") {
+              setMeetingLink("");
+            }
+          }}
+        >
+          <option value="online">Online</option>
+          <option value="in_person">In-person</option>
+          <option value="hybrid">Hybrid</option>
+        </select>
       </div>
 
-      <div className="form-group">
-        <label>Meeting Link</label>
-        <input
-          type="url"
-          placeholder="Example: https://zoom.us/example"
-          value={meetingLink}
-          onChange={(e) => setMeetingLink(e.target.value)}
-        />
-      </div>
+      {shouldShowLocation && (
+        <div className="form-group">
+          <label>Location</label>
+          <input
+            type="text"
+            placeholder="Example: Campus, Office, Room 201"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+          />
+        </div>
+      )}
+
+      {shouldShowMeetingLink && (
+        <div className="form-group">
+          <label>Meeting Link</label>
+          <input
+            type="url"
+            placeholder="Example: https://zoom.us/example"
+            value={meetingLink}
+            onChange={(e) => setMeetingLink(e.target.value)}
+          />
+        </div>
+      )}
 
       <div className="form-row">
         <div className="form-group">

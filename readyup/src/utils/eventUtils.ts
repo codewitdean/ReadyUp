@@ -1,4 +1,11 @@
 import type { ReadyUpEvent } from "../types/Event";
+import { calculateUrgencyScore } from "./priorityUtils";
+
+export function sortEventsByUrgency(events: ReadyUpEvent[]): ReadyUpEvent[] {
+  return [...events].sort((a, b) => {
+    return calculateUrgencyScore(b) - calculateUrgencyScore(a);
+  });
+}
 
 export function sortEventsByDateTime(events: ReadyUpEvent[]): ReadyUpEvent[] {
   return [...events].sort((a, b) => {
@@ -47,10 +54,10 @@ export function groupEventsByDateStatus(events: ReadyUpEvent[]): GroupedEvents {
     }
   });
 
-  return {
-    today: sortEventsByDateTime(today),
-    upcoming: sortEventsByDateTime(upcoming),
-    past: sortEventsByDateTime(past),
-    completed: sortEventsByDateTime(completed),
-  };
+return {
+  today: sortEventsByUrgency(today),
+  upcoming: sortEventsByUrgency(upcoming),
+  past: sortEventsByDateTime(past),
+  completed: sortEventsByDateTime(completed),
+};
 }
