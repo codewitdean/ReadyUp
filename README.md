@@ -120,6 +120,61 @@ Email/Notification Service
 
 ---
 
+### Future Features
+
+* User login and registration
+* PostgreSQL database
+* AI meeting preparation checklist
+* Google Calendar integration
+* Email or push notifications
+* AWS deployment
+* Dashboard analytics
+
+---
+
+## Engineering Highlights
+
+ReadyUp includes several software engineering decisions that make the project more than a basic event tracker.
+
+### Conditional Form Validation
+
+The event form changes based on the event format selected by the user.
+
+* Online events require a meeting link.
+* In-person events require a physical location.
+* Hybrid events require both a location and meeting link.
+
+This improves the user experience by only asking for information that is relevant to the event type.
+
+### Urgency Scoring Algorithm
+
+ReadyUp calculates an urgency score for each event based on:
+
+* Priority level
+* Event date proximity
+* Event category
+
+Higher-priority events, events happening sooner, and important categories like interviews receive higher urgency scores.
+
+### Most Urgent Event Ranking
+
+The dashboard shows the most urgent active event by filtering out completed events, sorting active events by urgency score, and displaying the highest-ranked event.
+
+### Reminder Calculation
+
+ReadyUp calculates reminder preview times for each event:
+
+* One day before
+* Day of event
+* 30 minutes before the event
+
+### LocalStorage Persistence
+
+The MVP stores events in browser LocalStorage so event data remains available after the user refreshes the page.
+
+---
+
+## Tech Stack
 ## Main Data Model
 
 ```ts
@@ -233,7 +288,8 @@ The goal of ReadyUp is to build a portfolio-quality software engineering project
 
 ## Current Status
 
-Stage 1: Planning and Documentation
+Stage 3: Frontend MVP
+
 Status: In Progress
 
 ---

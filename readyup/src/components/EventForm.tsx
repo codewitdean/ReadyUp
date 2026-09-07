@@ -6,8 +6,10 @@ import type {
   EventFormat,
 } from "../types/Event";
 
+type NewEventInput = Omit<ReadyUpEvent, "id" | "status" | "createdAt">;
+
 type EventFormProps = {
-  onAddEvent: (event: ReadyUpEvent) => void;
+  onAddEvent: (event: NewEventInput) => void;
 };
 
 function EventForm({ onAddEvent }: EventFormProps) {
@@ -64,21 +66,18 @@ function EventForm({ onAddEvent }: EventFormProps) {
       return;
     }
 
-    const newEvent: ReadyUpEvent = {
-      id: crypto.randomUUID(),
-      title,
-      description,
-      date,
-      startTime,
-      endTime,
-      eventFormat,
-      location,
-      meetingLink,
-      category,
-      priority,
-      status: "upcoming",
-      createdAt: new Date().toISOString(),
-    };
+    const newEvent: NewEventInput = {
+  title,
+  description,
+  date,
+  startTime,
+  endTime,
+  eventFormat,
+  location,
+  meetingLink,
+  category,
+  priority,
+};
 
     onAddEvent(newEvent);
 

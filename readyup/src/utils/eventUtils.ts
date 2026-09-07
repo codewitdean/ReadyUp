@@ -60,4 +60,4 @@ return {
   past: sortEventsByDateTime(past),
   completed: sortEventsByDateTime(completed),
 };
-}
+} 

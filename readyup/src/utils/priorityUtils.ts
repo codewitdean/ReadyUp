@@ -17,7 +17,7 @@ export function calculateUrgencyScore(event: ReadyUpEvent): number {
   const eventDateTime = new Date(`${event.date}T${event.startTime}`);
 
   const millisecondsUntilEvent = eventDateTime.getTime() - now.getTime();
-  const daysUntilEvent = millisecondsUntilEvent / (1000 * 60 * 60 * 24);
+  const daysUntilEvent = millisecondsUntilEvent / (1000 * 60 * 60 * 24);// Convert milliseconds to days
 
   if (daysUntilEvent < 0) {
     score += 0;
@@ -61,4 +61,15 @@ export function getUrgencyLabel(score: number): "Low" | "Medium" | "High" | "Cri
   }
 
   return "Low";
+}
+export function getMostUrgentEvent(events: ReadyUpEvent[]): ReadyUpEvent | null {
+  const activeEvents = events.filter((event) => event.status !== "completed");
+
+  if (activeEvents.length === 0) {
+    return null;
+  }
+
+  return [...activeEvents].sort((a, b) => {
+    return calculateUrgencyScore(b) - calculateUrgencyScore(a);
+  })[0];
 }
